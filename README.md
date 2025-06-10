@@ -16,7 +16,7 @@
 - 자신이 구현한 기능은 README.md 파일에 명확히 작성해 주세요.
 
 ### 필요한 기능
-- [ ] 예약 생성
+- [x] 예약 생성
   - [ ] 인증된 누구나 가능
   - [ ] 예약 생성시 이메일 전송
 - [ ] 특정 식당, 날짜에 대한 예약 현황 조회
@@ -111,6 +111,46 @@ body
 ```
 
 
-
+### 예약 생성
+#### 요청
+url: `/reservation`
+method: `POST`
+body
+```json
+{
+  "date": "2025-06-11",
+  "reservationTimeId": 1,
+  "email": "asd123@naver.com",
+  "restaurantId": 1
+}
+```
+#### 응답
+**성공**
+201 Created
+```json
+{
+  "id": 1,
+  "date": "2025-06-11",
+  "state": "승인 대기중",
+  "time": {
+    "id": 1,
+    "time": "12:00:00"
+  },
+  "member": {
+    "email": "asd123@naver.com"
+  },
+  "restaurant": {
+    "id": 1,
+    "name": "만리장성"
+  }
+}
+```
+**실패**
+400 Bad Request
+```json
+{
+  "message": "존재하지 않는 멤버입니다."
+}
+```
 
 

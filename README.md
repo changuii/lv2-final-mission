@@ -67,7 +67,7 @@ body
 }
 ```
 ---
-#### 응답 예시
+#### 응답
 **성공**
 201 Created
 ```json
@@ -80,6 +80,33 @@ body
 ```json
 {
     "message": "이미 존재하는 이메일입니다."
+}
+```
+
+### 로그인
+#### 요청
+url: `/auth/login`
+method: `POST`
+body
+```json
+{
+  "email": "asd123@naver.com",
+  "password": "password"
+}
+```
+#### 응답
+**성공**
+201 Created
+```json
+{
+  "token": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhc2QxMjNAbmF2ZXIuY29tIn0.qddpjJbZCXnig97F-IHvsKXtf8McLAH4AvqbwTCcmGY"
+}
+```
+**실패**
+400 Bad Request
+```json
+{
+  "message": "존재하지 않는 이메일입니다."
 }
 ```
 

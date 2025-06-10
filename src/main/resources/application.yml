@@ -6,3 +6,7 @@ spring:
     console:
       enabled: true
 
+auth:
+  token:
+    key: asdasgjeiowjoviojjrwoi
+    expiration: 3600

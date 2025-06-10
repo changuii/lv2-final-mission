@@ -32,4 +32,8 @@ public class Member {
         this.email = email;
         this.password = password;
     }
+
+    public boolean matchPassword(final String password){
+        return this.password.equals(password);
+    }
 }

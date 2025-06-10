@@ -27,7 +27,7 @@
   - [ ] 예약의 소유주와 동일
 - [ ] 특정 예약의 수정
   - [ ] 예약의 소유주와 동일
-- [ ] 특정 예약의 삭제
+- [x] 특정 예약의 삭제
   - [ ] 예약의 소유주와 동일
 - [ ] 식당 생성
 - [ ] 전체 식당 조회
@@ -156,7 +156,7 @@ body
 ### 예약 멤버 기준 전체 조회
 #### 요청
 url: `/reservation`
-method: `POST`
+method: `GET`
 query-param: `email`
 
 #### 응답
@@ -225,7 +225,7 @@ query-param: `email`
 ### 특정 예약의 상세 조회
 #### 요청
 url: `/reservation/{id}`
-method: `POST`
+method: `GET`
 path variable: `id`
 
 #### 응답
@@ -249,6 +249,24 @@ path variable: `id`
   }
 }
 ```
+**실패**
+400 Bad Request
+```json
+{
+  "message": "존재하지 않는 예약 id 입니다."
+}
+```
+
+### 특정 예약의 삭제
+#### 요청
+url: `/reservation/{id}`
+method: `DELETE`
+path variable: `id`
+
+#### 응답
+**성공**
+204 No Content
+
 **실패**
 400 Bad Request
 ```json

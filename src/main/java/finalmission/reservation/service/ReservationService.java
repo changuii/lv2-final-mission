@@ -71,4 +71,11 @@ public class ReservationService {
 
         return ReservationResponse.from(reservation);
     }
+
+    public void deleteById(final Long id){
+        final Reservation reservation = reservationJpaRepository.findById(id)
+                .orElseThrow(() -> new CustomException("존재하지 않는 예약 id 입니다."));
+
+        reservationJpaRepository.delete(reservation);
+    }
 }

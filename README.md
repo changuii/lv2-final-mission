@@ -33,7 +33,7 @@
 - [ ] 전체 식당 조회
 - [ ] 특정 식당의 예약 시간 생성
 - [ ] 로그인
-- [ ] 회원가입
+- [x] 회원가입
 
 ### 저장이 필요한 정보
 - Member
@@ -52,3 +52,38 @@
 - Restaurant
   - id
   - name
+
+## 기능 목록
+
+### 회원가입
+#### 요청
+url: `/member`
+method: `POST`
+body
+```json
+{
+  "email": "asd123@naver.com",
+  "password": "password"
+}
+```
+---
+#### 응답 예시
+**성공**
+201 Created
+```json
+{
+"email": "asd123@naver.com"
+}
+```
+**실패**
+400 Bad Request
+```json
+{
+    "message": "이미 존재하는 이메일입니다."
+}
+```
+
+
+
+
+

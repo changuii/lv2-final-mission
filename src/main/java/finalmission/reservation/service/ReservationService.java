@@ -14,6 +14,7 @@ import finalmission.restaurant.domain.Restaurant;
 import finalmission.restaurant.infrastructure.ReservationTimeJpaRepository;
 import finalmission.restaurant.infrastructure.RestaurantJpaRepository;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -52,5 +53,15 @@ public class ReservationService {
 
         final Reservation savedReservation = reservationJpaRepository.save(notSavedReservation);
         return ReservationResponse.from(savedReservation);
+    }
+
+    public List<ReservationResponse> findAllByMember(final String email){
+        final Member member = memberJpaRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException("존재하지 않는 멤버입니다."));
+
+        return reservationJpaRepository.findAllByMember(member)
+                .stream()
+                .map(ReservationResponse::from)
+                .toList();
     }
 }

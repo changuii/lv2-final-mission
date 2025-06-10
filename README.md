@@ -153,4 +153,72 @@ body
 }
 ```
 
+### 예약 멤버 기준 전체 조회
+#### 요청
+url: `/reservation`
+method: `POST`
+query-param: `email`
+
+#### 응답
+**성공**
+200 OK
+```json
+[
+    {
+        "id": 1,
+        "date": "2025-06-11",
+        "state": "승인 대기중",
+        "time": {
+            "id": 1,
+            "time": "12:00:00"
+        },
+        "member": {
+            "email": "asd123@naver.com"
+        },
+        "restaurant": {
+            "id": 1,
+            "name": "만리장성"
+        }
+    },
+    {
+        "id": 2,
+        "date": "2025-06-11",
+        "state": "승인 대기중",
+        "time": {
+            "id": 1,
+            "time": "12:00:00"
+        },
+        "member": {
+            "email": "asd123@naver.com"
+        },
+        "restaurant": {
+            "id": 1,
+            "name": "만리장성"
+        }
+    },
+    {
+        "id": 3,
+        "date": "2025-06-11",
+        "state": "승인 대기중",
+        "time": {
+            "id": 1,
+            "time": "12:00:00"
+        },
+        "member": {
+            "email": "asd123@naver.com"
+        },
+        "restaurant": {
+            "id": 1,
+            "name": "만리장성"
+        }
+    }
+]
+```
+**실패**
+400 Bad Request
+```json
+{
+  "message": "존재하지 않는 멤버입니다."
+}
+```
 

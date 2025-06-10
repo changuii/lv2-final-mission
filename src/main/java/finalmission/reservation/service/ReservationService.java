@@ -64,4 +64,11 @@ public class ReservationService {
                 .map(ReservationResponse::from)
                 .toList();
     }
+
+    public ReservationResponse findById(final Long id){
+        final Reservation reservation = reservationJpaRepository.findById(id)
+                .orElseThrow(() -> new CustomException("존재하지 않는 예약 id 입니다."));
+
+        return ReservationResponse.from(reservation);
+    }
 }

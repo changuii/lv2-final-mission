@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +37,14 @@ public class ReservationController {
             @RequestParam("email") final String email
     ) {
         final List<ReservationResponse> response = reservationService.findAllByMember(email);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ReservationResponse> findById(
+            @PathVariable("id") final Long id
+    ){
+        final ReservationResponse response = reservationService.findById(id);
         return ResponseEntity.ok(response);
     }
 }

@@ -6,6 +6,7 @@ import finalmission.member.infrastructure.MemberJpaRepository;
 import finalmission.reservation.domain.DateGenerator;
 import finalmission.reservation.domain.Reservation;
 import finalmission.reservation.domain.ReservationState;
+import finalmission.reservation.dto.ReservationDetailResponse;
 import finalmission.reservation.dto.ReservationRequest;
 import finalmission.reservation.dto.ReservationResponse;
 import finalmission.reservation.infrastructure.ReservationJpaRepository;
@@ -28,7 +29,7 @@ public class ReservationService {
     private final MemberJpaRepository memberJpaRepository;
     private final DateGenerator dateGenerator;
 
-    public ReservationResponse create(final ReservationRequest reservationRequest) {
+    public ReservationDetailResponse create(final ReservationRequest reservationRequest) {
         final Member member = memberJpaRepository.findByEmail(reservationRequest.email())
                 .orElseThrow(() -> new CustomException("존재하지 않는 멤버입니다."));
         final Restaurant restaurant = restaurantJpaRepository.findById(reservationRequest.restaurantId())
@@ -52,24 +53,24 @@ public class ReservationService {
                 .build();
 
         final Reservation savedReservation = reservationJpaRepository.save(notSavedReservation);
-        return ReservationResponse.from(savedReservation);
+        return ReservationDetailResponse.from(savedReservation);
     }
 
-    public List<ReservationResponse> findAllByMember(final String email){
+    public List<ReservationResponse> findAllByMember(final String email) {
         final Member member = memberJpaRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException("존재하지 않는 멤버입니다."));
 
         return reservationJpaRepository.findAllByMember(member)
                 .stream()
-                .map(ReservationResponse::from)
+                .map(reservation -> ReservationResponse.from(reservation, email))
                 .toList();
     }
 
-    public ReservationResponse findById(final Long id){
+    public ReservationDetailResponse findById(final Long id) {
         final Reservation reservation = reservationJpaRepository.findById(id)
                 .orElseThrow(() -> new CustomException("존재하지 않는 예약 id 입니다."));
 
-        return ReservationResponse.from(reservation);
+        return ReservationDetailResponse.from(reservation);
     }
 
     public void deleteById(final Long id){

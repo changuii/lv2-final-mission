@@ -1,6 +1,7 @@
 package finalmission.reservation.controller;
 
 import finalmission.reservation.dto.ReservationRequest;
+import finalmission.reservation.dto.ReservationDetailResponse;
 import finalmission.reservation.dto.ReservationResponse;
 import finalmission.reservation.service.ReservationService;
 import java.util.List;
@@ -24,10 +25,10 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> createReservation(
+    public ResponseEntity<ReservationDetailResponse> createReservation(
             @RequestBody final ReservationRequest request
     ) {
-        final ReservationResponse response = reservationService.create(request);
+        final ReservationDetailResponse response = reservationService.create(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED.value())
                 .body(response);
@@ -42,10 +43,10 @@ public class ReservationController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReservationResponse> findById(
+    public ResponseEntity<ReservationDetailResponse> findById(
             @PathVariable("id") final Long id
     ){
-        final ReservationResponse response = reservationService.findById(id);
+        final ReservationDetailResponse response = reservationService.findById(id);
         return ResponseEntity.ok(response);
     }
 

@@ -164,54 +164,30 @@ query-param: `email`
 200 OK
 ```json
 [
-    {
-        "id": 1,
-        "date": "2025-06-11",
-        "state": "승인 대기중",
-        "time": {
-            "id": 1,
-            "time": "12:00:00"
-        },
-        "member": {
-            "email": "asd123@naver.com"
-        },
-        "restaurant": {
-            "id": 1,
-            "name": "만리장성"
-        }
-    },
-    {
-        "id": 2,
-        "date": "2025-06-11",
-        "state": "승인 대기중",
-        "time": {
-            "id": 1,
-            "time": "12:00:00"
-        },
-        "member": {
-            "email": "asd123@naver.com"
-        },
-        "restaurant": {
-            "id": 1,
-            "name": "만리장성"
-        }
-    },
-    {
-        "id": 3,
-        "date": "2025-06-11",
-        "state": "승인 대기중",
-        "time": {
-            "id": 1,
-            "time": "12:00:00"
-        },
-        "member": {
-            "email": "asd123@naver.com"
-        },
-        "restaurant": {
-            "id": 1,
-            "name": "만리장성"
-        }
-    }
+  {
+    "id": 1,
+    "date": "2025-06-11",
+    "state": "승인 대기중",
+    "timeId": 1,
+    "email": "asd123@naver.com",
+    "restaurantId": 1
+  },
+  {
+    "id": 2,
+    "date": "2025-06-11",
+    "state": "승인 대기중",
+    "timeId": 1,
+    "email": "asd123@naver.com",
+    "restaurantId": 1
+  },
+  {
+    "id": 3,
+    "date": "2025-06-11",
+    "state": "승인 대기중",
+    "timeId": 1,
+    "email": "asd123@naver.com",
+    "restaurantId": 1
+  }
 ]
 ```
 **실패**

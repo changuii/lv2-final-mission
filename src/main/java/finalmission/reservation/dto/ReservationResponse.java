@@ -1,28 +1,26 @@
 package finalmission.reservation.dto;
 
-import finalmission.member.dto.MemberResponse;
 import finalmission.reservation.domain.Reservation;
-import finalmission.restaurant.dto.ReservationTimeResponse;
-import finalmission.restaurant.dto.RestaurantResponse;
 import java.time.LocalDate;
 
-public record ReservationResponse (
+public record ReservationResponse(
         Long id,
         LocalDate date,
         String state,
-        ReservationTimeResponse time,
-        MemberResponse member,
-        RestaurantResponse restaurant
-){
+        Long timeId,
+        String email,
+        Long restaurantId
+) {
 
-    public static ReservationResponse from(final Reservation reservation){
+    public static ReservationResponse from(final Reservation reservation, final String email){
         return new ReservationResponse(
                 reservation.getId(),
                 reservation.getDate(),
                 reservation.getReservationState().getMessage(),
-                ReservationTimeResponse.from(reservation.getReservationTime()),
-                MemberResponse.from(reservation.getMember()),
-                RestaurantResponse.from(reservation.getRestaurant())
+                reservation.getReservationTime().getId(),
+                email,
+                reservation.getRestaurant().getId()
+
         );
     }
 }

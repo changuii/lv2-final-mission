@@ -36,7 +36,7 @@
 - [ ] 회원가입
 
 ### 저장이 필요한 정보
-- User
+- Member
   - id
   - email
   - password

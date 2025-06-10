@@ -1,7 +1,7 @@
 package finalmission.reservation;
 
 import finalmission.restaurant.Restaurant;
-import finalmission.user.Member;
+import finalmission.member.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

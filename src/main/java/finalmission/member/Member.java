@@ -1,4 +1,4 @@
-package finalmission.user;
+package finalmission.member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

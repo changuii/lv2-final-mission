@@ -1,6 +1,7 @@
 package finalmission.member.infrastructure;
 
 import finalmission.member.domain.AuthTokenProvider;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
@@ -32,5 +33,25 @@ public class JwtAuthTokenProvider implements AuthTokenProvider {
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .setSubject(email)
                 .compact();
+    }
+
+    public boolean isValidJwt(final String jwt){
+        try{
+            final String removedBearer = jwt.replace("Bearer ", "");
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(removedBearer);
+            return true;
+        } catch (final JwtException e){
+            return false;
+        }
+    }
+
+    public String extractSubject(final String jwt){
+        final String removedBearer = jwt.replace("Bearer ", "");
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(removedBearer)
+                .getBody()
+                .getSubject();
     }
 }

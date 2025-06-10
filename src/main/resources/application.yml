@@ -17,4 +17,4 @@ spring:
 auth:
   token:
     key: asdasgjeiowjoviojjrwoi
-    expiration: 3600
+    expiration: 3600_000

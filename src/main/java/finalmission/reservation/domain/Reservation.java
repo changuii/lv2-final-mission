@@ -50,4 +50,8 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(nullable = false)
     private Restaurant restaurant;
+
+    public boolean isOwnMember(final Member member){
+        return this.member.equals(member);
+    }
 }

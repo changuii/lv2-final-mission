@@ -29,8 +29,8 @@ public class ReservationService {
     private final MemberJpaRepository memberJpaRepository;
     private final DateGenerator dateGenerator;
 
-    public ReservationDetailResponse create(final ReservationRequest reservationRequest) {
-        final Member member = memberJpaRepository.findByEmail(reservationRequest.email())
+    public ReservationDetailResponse create(final ReservationRequest reservationRequest, final String email) {
+        final Member member = memberJpaRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException("존재하지 않는 멤버입니다."));
         final Restaurant restaurant = restaurantJpaRepository.findById(reservationRequest.restaurantId())
                 .orElseThrow(() -> new CustomException("존재하지 않는 식당입니다."));
@@ -66,16 +66,29 @@ public class ReservationService {
                 .toList();
     }
 
-    public ReservationDetailResponse findById(final Long id) {
+    public ReservationDetailResponse findById(final Long id, final String email) {
         final Reservation reservation = reservationJpaRepository.findById(id)
                 .orElseThrow(() -> new CustomException("존재하지 않는 예약 id 입니다."));
+        final Member member = memberJpaRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException("존재하지 않는 멤버입니다."));
+
+        if(!reservation.isOwnMember(member)){
+            throw new CustomException("자신 소유의 예약만 삭제할 수 있습니다.");
+        }
 
         return ReservationDetailResponse.from(reservation);
     }
 
-    public void deleteById(final Long id){
+    public void deleteById(final Long id, final String email){
         final Reservation reservation = reservationJpaRepository.findById(id)
                 .orElseThrow(() -> new CustomException("존재하지 않는 예약 id 입니다."));
+        final Member member = memberJpaRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException("존재하지 않는 멤버입니다."));
+
+        if(!reservation.isOwnMember(member)){
+            throw new CustomException("자신 소유의 예약만 삭제할 수 있습니다.");
+        }
+
 
         reservationJpaRepository.delete(reservation);
     }

@@ -1,7 +1,8 @@
 package finalmission.reservation.controller;
 
-import finalmission.reservation.dto.ReservationRequest;
+import finalmission.config.AuthenticationPrincipal;
 import finalmission.reservation.dto.ReservationDetailResponse;
+import finalmission.reservation.dto.ReservationRequest;
 import finalmission.reservation.dto.ReservationResponse;
 import finalmission.reservation.service.ReservationService;
 import java.util.List;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,17 +26,18 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationDetailResponse> createReservation(
-            @RequestBody final ReservationRequest request
+            @RequestBody final ReservationRequest request,
+            @AuthenticationPrincipal final String email
     ) {
-        final ReservationDetailResponse response = reservationService.create(request);
+        final ReservationDetailResponse response = reservationService.create(request, email);
         return ResponseEntity
                 .status(HttpStatus.CREATED.value())
                 .body(response);
     }
 
-    @GetMapping
+    @GetMapping("/member")
     public ResponseEntity<List<ReservationResponse>> findAllByEmail(
-            @RequestParam("email") final String email
+            @AuthenticationPrincipal final String email
     ) {
         final List<ReservationResponse> response = reservationService.findAllByMember(email);
         return ResponseEntity.ok(response);
@@ -44,17 +45,19 @@ public class ReservationController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ReservationDetailResponse> findById(
-            @PathVariable("id") final Long id
+            @PathVariable("id") final Long id,
+            @AuthenticationPrincipal final String email
     ){
-        final ReservationDetailResponse response = reservationService.findById(id);
+        final ReservationDetailResponse response = reservationService.findById(id, email);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(
-            @PathVariable("id") final Long id
+            @PathVariable("id") final Long id,
+            @AuthenticationPrincipal final String email
     ) {
-        reservationService.deleteById(id);
+        reservationService.deleteById(id, email);
         return ResponseEntity.noContent().build();
     }
 }

@@ -17,18 +17,18 @@
 
 ### 필요한 기능
 - [x] 예약 생성
-  - [ ] 인증된 누구나 가능
+  - [x] 인증된 누구나 가능
   - [ ] 예약 생성시 이메일 전송
 - [ ] 특정 식당, 날짜에 대한 예약 현황 조회
   - [ ] 인증된 누구나 가능
 - [x] 특정 유저의 예약 전체 조회
-  - [ ] 예약의 소우쥬와 동일
+  - [x] 예약의 소우쥬와 동일
 - [x] 특정 예약의 상세 조회
-  - [ ] 예약의 소유주와 동일
+  - [x] 예약의 소유주와 동일
 - [ ] 특정 예약의 수정
   - [ ] 예약의 소유주와 동일
 - [x] 특정 예약의 삭제
-  - [ ] 예약의 소유주와 동일
+  - [x] 예약의 소유주와 동일
 - [ ] 식당 생성
 - [ ] 전체 식당 조회
 - [ ] 특정 식당의 예약 시간 생성
@@ -115,12 +115,14 @@ body
 #### 요청
 url: `/reservation`
 method: `POST`
+header: {
+  Authorization: Bearer Token
+}
 body
 ```json
 {
   "date": "2025-06-11",
   "reservationTimeId": 1,
-  "email": "asd123@naver.com",
   "restaurantId": 1
 }
 ```
@@ -156,8 +158,10 @@ body
 ### 예약 멤버 기준 전체 조회
 #### 요청
 url: `/reservation`
+header: {
+  Authorization: Bearer Token
+}
 method: `GET`
-query-param: `email`
 
 #### 응답
 **성공**
@@ -201,6 +205,9 @@ query-param: `email`
 ### 특정 예약의 상세 조회
 #### 요청
 url: `/reservation/{id}`
+header: {
+  Authorization: Bearer Token
+}
 method: `GET`
 path variable: `id`
 
@@ -237,6 +244,9 @@ path variable: `id`
 #### 요청
 url: `/reservation/{id}`
 method: `DELETE`
+header: {
+  Authorization: Bearer Token
+}
 path variable: `id`
 
 #### 응답

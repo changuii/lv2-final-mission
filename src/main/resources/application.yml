@@ -6,6 +6,9 @@ spring:
     console:
       enabled: true
 
+  jpa:
+    defer-datasource-initialization: true
+
 auth:
   token:
     key: asdasgjeiowjoviojjrwoi

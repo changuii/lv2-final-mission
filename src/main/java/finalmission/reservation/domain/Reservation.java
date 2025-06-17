@@ -1,7 +1,7 @@
 package finalmission.reservation.domain;
 
 import finalmission.member.domain.Member;
-import finalmission.restaurant.domain.ReservationTime;
+import finalmission.reservationtime.domain.ReservationTime;
 import finalmission.restaurant.domain.Restaurant;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -2,7 +2,7 @@ package finalmission.reservation.dto;
 
 import finalmission.member.dto.MemberResponse;
 import finalmission.reservation.domain.Reservation;
-import finalmission.restaurant.dto.ReservationTimeResponse;
+import finalmission.reservationtime.dto.ReservationTimeResponse;
 import finalmission.restaurant.dto.RestaurantResponse;
 import java.time.LocalDate;
 

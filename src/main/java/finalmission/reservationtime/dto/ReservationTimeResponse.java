@@ -1,11 +1,12 @@
-package finalmission.restaurant.dto;
+package finalmission.reservationtime.dto;
 
-import finalmission.restaurant.domain.ReservationTime;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import finalmission.reservationtime.domain.ReservationTime;
 import java.time.LocalTime;
 
 public record ReservationTimeResponse(
         Long id,
-        LocalTime time
+        @JsonFormat(pattern = "HH:mm") LocalTime time
 ) {
 
     public static ReservationTimeResponse from(final ReservationTime reservationTime) {

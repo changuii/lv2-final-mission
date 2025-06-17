@@ -4,6 +4,7 @@ package finalmission.restaurant.domain;
 import finalmission.member.domain.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,7 +32,11 @@ public class Restaurant {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Member member;
+
+    public boolean isOwner(final Member member){
+        return this.member.equals(member);
+    }
 }

@@ -93,6 +93,16 @@ public class ReservationService {
         reservation.accept(member);
     }
 
+    @Transactional
+    public void reject(final Long reservationId, final String email) {
+        final Reservation reservation = reservationJpaRepository.findById(reservationId)
+                .orElseThrow(() -> new CustomException("존재하지 않는 예약 id 입니다."));
+        final Member member = memberJpaRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException("존재하지 않는 멤버입니다."));
+
+        reservation.reject(member);
+    }
+
     public void deleteById(final Long id, final String email){
         final Reservation reservation = reservationJpaRepository.findById(id)
                 .orElseThrow(() -> new CustomException("존재하지 않는 예약 id 입니다."));

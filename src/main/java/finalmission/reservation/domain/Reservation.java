@@ -57,13 +57,25 @@ public class Reservation {
         return this.member.equals(member);
     }
 
-    public void accept(final Member member){
-        if(!this.restaurant.isOwner(member)){
-            throw new CustomException("식당 소유주만 예약을 승인할 수 있습니다.");
-        }
+    public void accept(final Member restaurantOwner){
+        validateRestaurantOwner(restaurantOwner);
         if(this.reservationState != ReservationState.PENDING){
             throw new CustomException("대기 상태의 예약만 승인할 수 있습니다.");
         }
         reservationState = ReservationState.ACCEPT;
+    }
+
+    public void reject(final Member restaurantOwner){
+        validateRestaurantOwner(restaurantOwner);
+        if(this.reservationState != ReservationState.PENDING){
+            throw new CustomException("대기 상태의 예약만 거부할 수 있습니다.");
+        }
+        reservationState = ReservationState.REJECT;
+    }
+
+    private void validateRestaurantOwner(final Member restaurantOwner) {
+        if(!this.restaurant.isOwner(restaurantOwner)){
+            throw new CustomException("식당 소유주만 예약을 승인할 수 있습니다.");
+        }
     }
 }

@@ -391,6 +391,107 @@ public class ReservationApiTest {
     }
 
     @Nested
+    @DisplayName("예약 승인")
+    class Reject {
+
+        @DisplayName("예약 정상 승인")
+        @Test
+        void reject1() {
+            final LocalDate today = LocalDate.of(2025, 06, 01);
+            given(dateGenerator.today()).willReturn(today);
+
+            final String email = "asd@naver.com";
+            final String password = "1234";
+            TestFixture.createMember(email, password, port);
+            final Header authHeader = TestFixture.createAuthHeader(email, password, port);
+
+            final String restaurantName = "식당이름";
+            final Long restaurantId = TestFixture.createRestaurant(authHeader, restaurantName, port);
+
+            final LocalTime time = LocalTime.of(12, 30);
+            final Long reservationTimeId = TestFixture.createReservationTime(authHeader, restaurantId, time, port);
+
+            final LocalDate reservationDate = LocalDate.of(2025, 06, 12);
+            final Long reservationId = TestFixture.createReservation(authHeader, reservationDate, restaurantId,
+                    reservationTimeId, port);
+
+            RestAssured.given()
+                    .port(port)
+                    .header(authHeader)
+                    .when()
+                    .patch("/reservation/reject/{id}", reservationId)
+                    .then()
+                    .statusCode(HttpStatus.OK.value());
+        }
+
+        @DisplayName("식당 주인이 아니라면, 승인처리가 불가능하고 400 응답을 반환한다.")
+        @Test
+        void rejct2() {
+            final LocalDate today = LocalDate.of(2025, 06, 01);
+            given(dateGenerator.today()).willReturn(today);
+
+            final String email = "asd@naver.com";
+            final String password = "1234";
+            TestFixture.createMember(email, password, port);
+            final Header authHeader = TestFixture.createAuthHeader(email, password, port);
+
+            final String anotherEmail = "asd1234@naver.com";
+            TestFixture.createMember(anotherEmail, password, port);
+            final Header anotherAuthHeader = TestFixture.createAuthHeader(anotherEmail, password, port);
+
+            final String restaurantName = "식당이름";
+            final Long restaurantId = TestFixture.createRestaurant(authHeader, restaurantName, port);
+
+            final LocalTime time = LocalTime.of(12, 30);
+            final Long reservationTimeId = TestFixture.createReservationTime(authHeader, restaurantId, time, port);
+
+            final LocalDate reservationDate = LocalDate.of(2025, 06, 12);
+            final Long reservationId = TestFixture.createReservation(anotherAuthHeader, reservationDate, restaurantId,
+                    reservationTimeId, port);
+
+            RestAssured.given()
+                    .port(port)
+                    .header(anotherAuthHeader)
+                    .when()
+                    .patch("/reservation/reject/{id}", reservationId)
+                    .then()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
+
+        @DisplayName("대기 상태의 예약이 아니라면 400을 응답한다.")
+        @Test
+        void reject3() {
+            final LocalDate today = LocalDate.of(2025, 06, 01);
+            given(dateGenerator.today()).willReturn(today);
+
+            final String email = "asd@naver.com";
+            final String password = "1234";
+            TestFixture.createMember(email, password, port);
+            final Header authHeader = TestFixture.createAuthHeader(email, password, port);
+
+            final String restaurantName = "식당이름";
+            final Long restaurantId = TestFixture.createRestaurant(authHeader, restaurantName, port);
+
+            final LocalTime time = LocalTime.of(12, 30);
+            final Long reservationTimeId = TestFixture.createReservationTime(authHeader, restaurantId, time, port);
+
+            final LocalDate reservationDate = LocalDate.of(2025, 06, 12);
+            final Long reservationId = TestFixture.createReservation(authHeader, reservationDate, restaurantId,
+                    reservationTimeId, port);
+            TestFixture.acceptReservation(authHeader, reservationId, port);
+
+            RestAssured.given()
+                    .port(port)
+                    .header(authHeader)
+                    .when()
+                    .patch("/reservation/reject/{id}", reservationId)
+                    .then()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
+
+    }
+
+    @Nested
     @DisplayName("예약 삭제")
     class Delete {
 
@@ -417,6 +518,7 @@ public class ReservationApiTest {
 
             final Long reservationId = TestFixture.createReservation(authHeader, reservationDate, restaurantId,
                     reservationTimeId, port);
+
             RestAssured.given()
                     .log().all()
                     .port(port)

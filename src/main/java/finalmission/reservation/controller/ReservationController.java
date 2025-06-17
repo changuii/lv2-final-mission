@@ -62,6 +62,15 @@ public class ReservationController {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/reject/{id}")
+    public ResponseEntity<Void> reject(
+            @PathVariable("id") final Long id,
+            @AuthenticationPrincipal final String email
+    ){
+        reservationService.reject(id, email);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(
             @PathVariable("id") final Long id,

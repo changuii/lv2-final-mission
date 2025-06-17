@@ -44,7 +44,7 @@ class AuthServiceTest {
 
             given(memberJpaRepository.findByEmail(authRequest.email()))
                     .willReturn(Optional.of(
-                            new Member(authRequest.email(), authRequest.password())
+                            new Member(1L, "mock", authRequest.email(), authRequest.password())
                     ));
             given(authTokenProvider.generateToken(authRequest.email()))
                     .willReturn("token");
@@ -91,7 +91,7 @@ class AuthServiceTest {
 
             given(memberJpaRepository.findByEmail(authRequest.email()))
                     .willReturn(Optional.of(
-                            new Member(authRequest.email(), "is not match pass")
+                            new Member(1L, "mock", authRequest.email(), "is not match pass")
                     ));
             given(authTokenProvider.generateToken(authRequest.email()))
                     .willReturn("token");

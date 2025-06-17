@@ -73,7 +73,7 @@ public class ReservationService {
                 .orElseThrow(() -> new CustomException("존재하지 않는 멤버입니다."));
 
         if(!reservation.isOwnMember(member)){
-            throw new CustomException("자신 소유의 예약만 삭제할 수 있습니다.");
+            throw new CustomException("자신 소유의 예약만 조회할 수 있습니다.");
         }
 
         return ReservationDetailResponse.from(reservation);

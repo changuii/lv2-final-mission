@@ -14,7 +14,7 @@ class MemberTest {
     void matchPassword(final String password, final boolean expected) {
         // given
         final Member member = new Member(
-                1L, "email", "password"
+                1L, "nickname", "email", "password"
         );
 
         // when

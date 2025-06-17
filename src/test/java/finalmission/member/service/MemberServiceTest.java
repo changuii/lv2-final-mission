@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 
 import finalmission.exception.CustomException;
 import finalmission.member.domain.Member;
+import finalmission.member.domain.NameGenerator;
 import finalmission.member.dto.MemberRequest;
 import finalmission.member.dto.MemberResponse;
 import finalmission.member.infrastructure.MemberJpaRepository;
@@ -19,10 +20,12 @@ class MemberServiceTest {
 
     private final MemberService memberService;
     private final MemberJpaRepository memberJpaRepository;
+    private final NameGenerator nameGenerator;
 
     public MemberServiceTest() {
         memberJpaRepository = mock(MemberJpaRepository.class);
-        this.memberService = new MemberService(memberJpaRepository);
+        nameGenerator = mock(NameGenerator.class);
+        this.memberService = new MemberService(memberJpaRepository, nameGenerator);
     }
 
     @Nested
@@ -38,15 +41,19 @@ class MemberServiceTest {
                     "pass"
             );
 
+            given(nameGenerator.generateName())
+                    .willReturn("mock");
             given(memberJpaRepository.save(any()))
                     .willReturn(new Member(
                             1L,
+                            "mock",
                             request.email(),
                             request.password()
                     ));
 
             final MemberResponse expected = new MemberResponse(
-                    "asd123@naver.com"
+                    "asd123@naver.com",
+                    "mock"
             );
 
             // when
@@ -64,11 +71,15 @@ class MemberServiceTest {
                     "asd123@naver.com",
                     "pass"
             );
+
+            given(nameGenerator.generateName())
+                    .willReturn("mock");
             given(memberJpaRepository.existsByEmail(request.email()))
                     .willReturn(true);
             given(memberJpaRepository.save(any()))
                     .willReturn(new Member(
                             1L,
+                            "mock",
                             request.email(),
                             request.password()
                     ));

@@ -7,6 +7,7 @@ import finalmission.restaurant.domain.Restaurant;
 import finalmission.restaurant.dto.RestaurantRequest;
 import finalmission.restaurant.dto.RestaurantResponse;
 import finalmission.restaurant.infrastructure.RestaurantJpaRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +29,12 @@ public class RestaurantService {
 
         final Restaurant savedRestaurant = restaurantJpaRepository.save(restaurant);
         return RestaurantResponse.from(savedRestaurant);
+    }
+
+    public List<RestaurantResponse> findAll(){
+        return restaurantJpaRepository.findAll()
+                .stream()
+                .map(RestaurantResponse::from)
+                .toList();
     }
 }

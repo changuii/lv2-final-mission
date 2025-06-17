@@ -4,9 +4,11 @@ import finalmission.config.AuthenticationPrincipal;
 import finalmission.restaurant.dto.RestaurantRequest;
 import finalmission.restaurant.dto.RestaurantResponse;
 import finalmission.restaurant.service.RestaurantService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +30,11 @@ public class RestaurantController {
         return ResponseEntity
                 .status(HttpStatus.CREATED.value())
                 .body(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<RestaurantResponse>> findAll() {
+        return ResponseEntity.ok(restaurantService.findAll());
     }
 
 

@@ -53,8 +53,32 @@ public class RestaurantApiTest {
                     .body("id", notNullValue())
                     .body("name", equalTo(restaurantName));
         }
+    }
 
+    @Nested
+    @DisplayName("전체 식당 조회")
+    class FindAll {
 
+        @DisplayName("전체 식당 조회")
+        @Test
+        void findAll() {
+            final String email = "asd@naver.com";
+            final String password = "1234";
+
+            TestFixture.createMember(email, password, port);
+            final Header authHeader = TestFixture.createAuthHeader(email, password, port);
+
+            TestFixture.createRestaurant(authHeader, "restaurant1", port);
+            TestFixture.createRestaurant(authHeader, "restaurant2", port);
+            TestFixture.createRestaurant(authHeader, "restaurant3", port);
+
+            RestAssured.given()
+                    .port(port)
+                    .when()
+                    .get("/restaurant")
+                    .then()
+                    .body("size()", equalTo(3));
+        }
     }
 
 }

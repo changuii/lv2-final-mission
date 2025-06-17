@@ -35,4 +35,8 @@ public class ReservationTime {
     @JoinColumn(nullable = false)
     private Restaurant restaurant;
 
+    public boolean isEqualRestaurant(final Restaurant restaurant){
+        return this.restaurant.equals(restaurant);
+    }
+
 }

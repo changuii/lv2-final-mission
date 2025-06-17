@@ -43,6 +43,9 @@ public class ReservationService {
         if(reservationDate.isBefore(today) || reservationDate.equals(today)){
             throw new CustomException("당일 예약 혹은 이미 지난 시간으로 예약이 불가능합니다.");
         }
+        if(!reservationTime.isEqualRestaurant(restaurant)){
+            throw new CustomException("식당의 예약 시간이 잘못되었습니다.");
+        }
 
         final Reservation notSavedReservation = Reservation.builder()
                 .date(reservationRequest.date())

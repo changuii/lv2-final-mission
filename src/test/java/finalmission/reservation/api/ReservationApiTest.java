@@ -136,6 +136,39 @@ public class ReservationApiTest {
                     .then()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
+
+        @DisplayName("다른 식당의 예약 시간 사용시 400을 응답한다.")
+        @Test
+        void create4() {
+            final LocalDate today = LocalDate.of(2025, 06, 01);
+            given(dateGenerator.today()).willReturn(today);
+
+            final String email = "asd@naver.com";
+            final String password = "1234";
+            TestFixture.createMember(email, password, port);
+            final Header authHeader = TestFixture.createAuthHeader(email, password, port);
+
+            final String restaurantName = "식당이름";
+            final Long restaurantId = TestFixture.createRestaurant(authHeader, restaurantName, port);
+            final Long anotherRestaurantId = TestFixture.createRestaurant(authHeader, "다른 식당", port);
+
+            final LocalTime time = LocalTime.of(12, 30);
+            final Long anotherReservationTimeId = TestFixture.createReservationTime(authHeader, anotherRestaurantId, time, port);
+
+            final LocalDate reservationDate = LocalDate.of(2025, 06, 12);
+            final ReservationRequest request = new ReservationRequest(reservationDate, anotherReservationTimeId,
+                    restaurantId);
+
+            RestAssured.given()
+                    .log().all()
+                    .port(port)
+                    .contentType(ContentType.JSON)
+                    .header(authHeader)
+                    .body(request)
+                    .when().post("/reservation")
+                    .then()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
     }
 
     @Nested

@@ -110,4 +110,14 @@ public class TestFixture {
                 .id();
     }
 
+    public static void acceptReservation(final Header authHeader, final Long reservationId, final int port){
+        RestAssured.given()
+                .port(port)
+                .header(authHeader)
+                .when()
+                .patch("/reservation/accept/{id}", reservationId)
+                .then()
+                .statusCode(HttpStatus.OK.value());
+    }
+
 }

@@ -1,5 +1,6 @@
 package finalmission.reservation.domain;
 
+import finalmission.exception.CustomException;
 import finalmission.member.domain.Member;
 import finalmission.reservationtime.domain.ReservationTime;
 import finalmission.restaurant.domain.Restaurant;
@@ -54,5 +55,15 @@ public class Reservation {
 
     public boolean isOwnMember(final Member member){
         return this.member.equals(member);
+    }
+
+    public void accept(final Member member){
+        if(!this.restaurant.isOwner(member)){
+            throw new CustomException("식당 소유주만 예약을 승인할 수 있습니다.");
+        }
+        if(this.reservationState != ReservationState.PENDING){
+            throw new CustomException("대기 상태의 예약만 승인할 수 있습니다.");
+        }
+        reservationState = ReservationState.ACCEPT;
     }
 }

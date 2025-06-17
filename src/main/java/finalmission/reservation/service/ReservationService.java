@@ -11,13 +11,14 @@ import finalmission.reservation.dto.ReservationRequest;
 import finalmission.reservation.dto.ReservationResponse;
 import finalmission.reservation.infrastructure.ReservationJpaRepository;
 import finalmission.reservationtime.domain.ReservationTime;
-import finalmission.restaurant.domain.Restaurant;
 import finalmission.reservationtime.infrastructure.ReservationTimeJpaRepository;
+import finalmission.restaurant.domain.Restaurant;
 import finalmission.restaurant.infrastructure.RestaurantJpaRepository;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -80,6 +81,16 @@ public class ReservationService {
         }
 
         return ReservationDetailResponse.from(reservation);
+    }
+
+    @Transactional
+    public void accept(final Long reservationId, final String email) {
+        final Reservation reservation = reservationJpaRepository.findById(reservationId)
+                .orElseThrow(() -> new CustomException("존재하지 않는 예약 id 입니다."));
+        final Member member = memberJpaRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException("존재하지 않는 멤버입니다."));
+
+        reservation.accept(member);
     }
 
     public void deleteById(final Long id, final String email){

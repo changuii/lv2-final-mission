@@ -3,7 +3,7 @@ package finalmission.reservationtime.api;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-import finalmission.fixture.TestFixture;
+import finalmission.fixture.ApiTestFixture;
 import finalmission.reservationtime.dto.ReservationTimeRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -36,10 +36,10 @@ public class ReservationTimeApiTest {
             final String email = "asd@naver.com";
             final String password = "1234";
 
-            TestFixture.createMember(email, password, port);
-            final Header authHeader = TestFixture.createAuthHeader(email, password, port);
+            ApiTestFixture.createMember(email, password, port);
+            final Header authHeader = ApiTestFixture.createAuthHeader(email, password, port);
 
-            final Long restaurantId = TestFixture.createRestaurant(authHeader, "내식당", port);
+            final Long restaurantId = ApiTestFixture.createRestaurant(authHeader, "내식당", port);
             final LocalTime time = LocalTime.of(12, 30);
             final ReservationTimeRequest request = new ReservationTimeRequest(restaurantId, time);
 
@@ -63,13 +63,13 @@ public class ReservationTimeApiTest {
             final String email = "asd@naver.com";
             final String password = "1234";
 
-            TestFixture.createMember(email, password, port);
-            final Header authHeader = TestFixture.createAuthHeader(email, password, port);
+            ApiTestFixture.createMember(email, password, port);
+            final Header authHeader = ApiTestFixture.createAuthHeader(email, password, port);
 
-            final Long restaurantId = TestFixture.createRestaurant(authHeader, "내식당", port);
+            final Long restaurantId = ApiTestFixture.createRestaurant(authHeader, "내식당", port);
             final LocalTime time = LocalTime.of(12, 30);
             final ReservationTimeRequest request = new ReservationTimeRequest(restaurantId, time);
-            TestFixture.createReservationTime(authHeader, restaurantId, time, port);
+            ApiTestFixture.createReservationTime(authHeader, restaurantId, time, port);
 
             RestAssured
                     .given()
@@ -89,16 +89,16 @@ public class ReservationTimeApiTest {
             final String email = "asd@naver.com";
             final String password = "1234";
 
-            TestFixture.createMember(email, password, port);
-            final Header authHeader = TestFixture.createAuthHeader(email, password, port);
+            ApiTestFixture.createMember(email, password, port);
+            final Header authHeader = ApiTestFixture.createAuthHeader(email, password, port);
 
-            final Long restaurantId = TestFixture.createRestaurant(authHeader, "내식당", port);
+            final Long restaurantId = ApiTestFixture.createRestaurant(authHeader, "내식당", port);
             final LocalTime time = LocalTime.of(12, 30);
             final ReservationTimeRequest request = new ReservationTimeRequest(restaurantId, time);
 
             final String anotherEmail = "asd1234@naver.com";
-            TestFixture.createMember(anotherEmail, password, port);
-            final Header anotherAuthHeader = TestFixture.createAuthHeader(anotherEmail, password, port);
+            ApiTestFixture.createMember(anotherEmail, password, port);
+            final Header anotherAuthHeader = ApiTestFixture.createAuthHeader(anotherEmail, password, port);
 
             RestAssured
                     .given()

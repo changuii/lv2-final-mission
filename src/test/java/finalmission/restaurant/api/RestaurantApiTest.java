@@ -3,7 +3,7 @@ package finalmission.restaurant.api;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-import finalmission.fixture.TestFixture;
+import finalmission.fixture.ApiTestFixture;
 import finalmission.restaurant.dto.RestaurantRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -35,8 +35,8 @@ public class RestaurantApiTest {
             final String email = "asd123@naver.com";
             final String password = "pass";
 
-            TestFixture.createMember(email, password, port);
-            final Header authHeader = TestFixture.createAuthHeader(email, password, port);
+            ApiTestFixture.createMember(email, password, port);
+            final Header authHeader = ApiTestFixture.createAuthHeader(email, password, port);
 
             final String restaurantName = "식당이름";
             final RestaurantRequest restaurantRequest = new RestaurantRequest(restaurantName);
@@ -65,12 +65,12 @@ public class RestaurantApiTest {
             final String email = "asd@naver.com";
             final String password = "1234";
 
-            TestFixture.createMember(email, password, port);
-            final Header authHeader = TestFixture.createAuthHeader(email, password, port);
+            ApiTestFixture.createMember(email, password, port);
+            final Header authHeader = ApiTestFixture.createAuthHeader(email, password, port);
 
-            TestFixture.createRestaurant(authHeader, "restaurant1", port);
-            TestFixture.createRestaurant(authHeader, "restaurant2", port);
-            TestFixture.createRestaurant(authHeader, "restaurant3", port);
+            ApiTestFixture.createRestaurant(authHeader, "restaurant1", port);
+            ApiTestFixture.createRestaurant(authHeader, "restaurant2", port);
+            ApiTestFixture.createRestaurant(authHeader, "restaurant3", port);
 
             RestAssured.given()
                     .port(port)

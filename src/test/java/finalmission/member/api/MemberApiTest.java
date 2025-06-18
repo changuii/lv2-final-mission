@@ -3,7 +3,7 @@ package finalmission.member.api;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
 
-import finalmission.fixture.TestFixture;
+import finalmission.fixture.ApiTestFixture;
 import finalmission.member.domain.NameGenerator;
 import finalmission.member.dto.MemberRequest;
 import io.restassured.RestAssured;
@@ -67,7 +67,7 @@ public class MemberApiTest {
             given(nameGenerator.generateName())
                     .willReturn(nickname);
 
-            TestFixture.createMember(email, password, port);
+            ApiTestFixture.createMember(email, password, port);
 
             RestAssured
                     .given()

@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import org.springframework.http.HttpStatus;
 
-public class TestFixture {
+public class ApiTestFixture {
 
     public static void createMember(final String email, final String password, int port) {
         final MemberRequest request = new MemberRequest(email, password);

@@ -2,7 +2,7 @@ package finalmission.member.api;
 
 import static org.hamcrest.Matchers.notNullValue;
 
-import finalmission.fixture.TestFixture;
+import finalmission.fixture.ApiTestFixture;
 import finalmission.member.dto.AuthRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -33,7 +33,7 @@ public class AuthApiTest {
             final String password = "pass";
             final AuthRequest authRequest = new AuthRequest(email, password);
 
-            TestFixture.createMember(email, password, port);
+            ApiTestFixture.createMember(email, password, port);
 
             RestAssured.given()
                     .log().all()
@@ -70,7 +70,7 @@ public class AuthApiTest {
             final String password = "pass";
             final AuthRequest authRequest = new AuthRequest(email, password);
 
-            TestFixture.createMember(email, "pass1", port);
+            ApiTestFixture.createMember(email, "pass1", port);
 
             RestAssured.given()
                     .log().all()

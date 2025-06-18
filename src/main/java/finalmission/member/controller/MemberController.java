@@ -3,6 +3,7 @@ package finalmission.member.controller;
 import finalmission.member.dto.MemberRequest;
 import finalmission.member.dto.MemberResponse;
 import finalmission.member.service.MemberService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class MemberController {
 
     @PostMapping
     public ResponseEntity<MemberResponse> createMember(
-            @RequestBody final MemberRequest request
+            @Valid @RequestBody final MemberRequest request
     ) {
         final MemberResponse member = memberService.createMember(request);
         return ResponseEntity

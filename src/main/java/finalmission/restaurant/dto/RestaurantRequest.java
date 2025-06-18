@@ -1,6 +1,8 @@
 package finalmission.restaurant.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public record RestaurantRequest(
-        String name
+        @NotBlank String name
 ) {
 }

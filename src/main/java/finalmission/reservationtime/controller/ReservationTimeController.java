@@ -4,6 +4,7 @@ import finalmission.config.AuthenticationPrincipal;
 import finalmission.reservationtime.dto.ReservationTimeRequest;
 import finalmission.reservationtime.dto.ReservationTimeResponse;
 import finalmission.reservationtime.service.ReservationTimeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class ReservationTimeController {
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> create(
             @AuthenticationPrincipal final String email,
-            @RequestBody final ReservationTimeRequest request
+            @Valid @RequestBody final ReservationTimeRequest request
     ) {
         final ReservationTimeResponse response = reservationTimeService.create(request, email);
         return ResponseEntity

@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtAuthTokenProvider implements AuthTokenProvider {
 
+    private static final String TOKEN_TYPE = "Bearer ";
+
     private final Key key;
     private final int expirationTime;
 
@@ -28,7 +30,7 @@ public class JwtAuthTokenProvider implements AuthTokenProvider {
 
     @Override
     public String generateToken(final String email) {
-        return "Bearer " + Jwts.builder()
+        return TOKEN_TYPE + Jwts.builder()
                 .signWith(key)
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .setSubject(email)
@@ -37,8 +39,8 @@ public class JwtAuthTokenProvider implements AuthTokenProvider {
 
     public boolean isValidJwt(final String jwt){
         try{
-            final String removedBearer = jwt.replace("Bearer ", "");
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(removedBearer);
+            final String token = extractToken(jwt);
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (final JwtException e){
             return false;
@@ -46,12 +48,16 @@ public class JwtAuthTokenProvider implements AuthTokenProvider {
     }
 
     public String extractSubject(final String jwt){
-        final String removedBearer = jwt.replace("Bearer ", "");
+        final String token = extractToken(jwt);
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(removedBearer)
+                .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+    }
+
+    private String extractToken(final String jwt) {
+        return jwt.replace(TOKEN_TYPE, "");
     }
 }

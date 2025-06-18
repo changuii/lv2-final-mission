@@ -290,6 +290,55 @@ public class ReservationApiTest {
     }
 
     @Nested
+    @DisplayName("식당, 날짜 기준 전체 조회")
+    class FindAllByRestaurantAndDate {
+
+        @DisplayName("식당 날짜 기준으로 예약을 전체 조회한다.")
+        @Test
+        void findAllByRestaurantAndDate1() {
+            final LocalDate today = LocalDate.of(2025, 06, 01);
+            given(dateGenerator.today()).willReturn(today);
+
+            final String email = "asd@naver.com";
+            final String password = "1234";
+            TestFixture.createMember(email, password, port);
+            final Header authHeader = TestFixture.createAuthHeader(email, password, port);
+
+            final String restaurantName = "식당이름";
+            final String anotherRestaurantName = "다른 식당";
+            final Long restaurantId = TestFixture.createRestaurant(authHeader, restaurantName, port);
+            final Long anotherRestaurantId = TestFixture.createRestaurant(authHeader, anotherRestaurantName, port);
+
+            final LocalTime time = LocalTime.of(12, 30);
+            final Long reservationTimeId = TestFixture.createReservationTime(authHeader, restaurantId, time, port);
+            final Long anotherReservationTimeId = TestFixture.createReservationTime(authHeader, anotherRestaurantId, time, port);
+
+            final LocalDate reservationDate = LocalDate.of(2025, 06, 12);
+            final LocalDate anotherReservationDate = LocalDate.of(2025, 06, 13);
+            final ReservationRequest request = new ReservationRequest(reservationDate, reservationTimeId,
+                    restaurantId);
+
+            TestFixture.createReservation(authHeader, reservationDate, restaurantId,
+                    reservationTimeId, port);
+            TestFixture.createReservation(authHeader, reservationDate, anotherRestaurantId, anotherReservationTimeId, port);
+            TestFixture.createReservation(authHeader, anotherReservationDate, restaurantId, reservationTimeId, port);
+
+
+            RestAssured.given()
+                    .log().all()
+                    .port(port)
+                    .contentType(ContentType.JSON)
+                    .header(authHeader)
+                    .body(request)
+                    .when().get("/reservation/restaurant/{id}?date={date}", restaurantId, reservationDate.toString())
+                    .then()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("size()", equalTo(1));
+        }
+
+    }
+
+    @Nested
     @DisplayName("예약 승인")
     class Accept {
 

@@ -83,6 +83,16 @@ public class ReservationService {
         return ReservationDetailResponse.from(reservation);
     }
 
+    public List<ReservationDetailResponse> findAllByRestaurantAndDate(final Long restaurantId, final LocalDate date) {
+        final Restaurant restaurant = restaurantJpaRepository.findById(restaurantId)
+                .orElseThrow(() -> new CustomException("존재하지 않는 식당입니다."));
+
+        return reservationJpaRepository.findAllByRestaurantAndDate(restaurant, date)
+                .stream()
+                .map(ReservationDetailResponse::from)
+                .toList();
+    }
+
     @Transactional
     public void accept(final Long reservationId, final String email) {
         final Reservation reservation = reservationJpaRepository.findById(reservationId)

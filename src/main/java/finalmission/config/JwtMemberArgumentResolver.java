@@ -21,20 +21,25 @@ public class JwtMemberArgumentResolver implements HandlerMethodArgumentResolver 
     }
 
     @Override
-    public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
-                                  final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory)
-            throws Exception {
-        final HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
-
-        final String jwt = request.getHeader("Authorization");
-
-        if (jwt == null) {
-            throw new TokenInvalidException();
-        }
-        if (!jwtAuthTokenProvider.isValidJwt(jwt)) {
-            throw new TokenInvalidException();
-        }
-
+    public Object resolveArgument(
+            final MethodParameter parameter,
+            final ModelAndViewContainer mavContainer,
+            final NativeWebRequest webRequest,
+            final WebDataBinderFactory binderFactory
+    ) {
+        final String jwt = extractToken(webRequest);
+        validateJwtToken(jwt);
         return jwtAuthTokenProvider.extractSubject(jwt);
+    }
+
+    private void validateJwtToken(final String jwt) {
+        if (jwt == null || !jwtAuthTokenProvider.isValidJwt(jwt)) {
+            throw new TokenInvalidException();
+        }
+    }
+
+    private String extractToken(final NativeWebRequest webRequest) {
+        final HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
+        return request.getHeader("Authorization");
     }
 }

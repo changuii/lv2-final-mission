@@ -13,6 +13,11 @@ spring:
       hibernate:
         format_sql: true
     open-in-view: false
+  http:
+    client:
+      read-timeout: 3000
+      connect-timeout: 3000
+
 
 auth:
   token:

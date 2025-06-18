@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ReservationService {
 
     private final ReservationJpaRepository reservationJpaRepository;
@@ -60,6 +61,7 @@ public class ReservationService {
         return ReservationDetailResponse.from(savedReservation);
     }
 
+    @Transactional(readOnly = true)
     public List<ReservationResponse> findAllByMember(final String email) {
         final Member member = memberJpaRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException("존재하지 않는 멤버입니다."));
@@ -70,6 +72,7 @@ public class ReservationService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public ReservationDetailResponse findById(final Long id, final String email) {
         final Reservation reservation = reservationJpaRepository.findById(id)
                 .orElseThrow(() -> new CustomException("존재하지 않는 예약 id 입니다."));
@@ -83,6 +86,7 @@ public class ReservationService {
         return ReservationDetailResponse.from(reservation);
     }
 
+    @Transactional(readOnly = true)
     public List<ReservationDetailResponse> findAllByRestaurantAndDate(final Long restaurantId, final LocalDate date) {
         final Restaurant restaurant = restaurantJpaRepository.findById(restaurantId)
                 .orElseThrow(() -> new CustomException("존재하지 않는 식당입니다."));
@@ -93,7 +97,6 @@ public class ReservationService {
                 .toList();
     }
 
-    @Transactional
     public void accept(final Long reservationId, final String email) {
         final Reservation reservation = reservationJpaRepository.findById(reservationId)
                 .orElseThrow(() -> new CustomException("존재하지 않는 예약 id 입니다."));
@@ -103,7 +106,6 @@ public class ReservationService {
         reservation.accept(member);
     }
 
-    @Transactional
     public void reject(final Long reservationId, final String email) {
         final Reservation reservation = reservationJpaRepository.findById(reservationId)
                 .orElseThrow(() -> new CustomException("존재하지 않는 예약 id 입니다."));

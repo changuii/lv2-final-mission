@@ -10,9 +10,11 @@ import finalmission.restaurant.infrastructure.RestaurantJpaRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RestaurantService {
 
     private final RestaurantJpaRepository restaurantJpaRepository;
@@ -31,6 +33,7 @@ public class RestaurantService {
         return RestaurantResponse.from(savedRestaurant);
     }
 
+    @Transactional(readOnly = true)
     public List<RestaurantResponse> findAll(){
         return restaurantJpaRepository.findAll()
                 .stream()

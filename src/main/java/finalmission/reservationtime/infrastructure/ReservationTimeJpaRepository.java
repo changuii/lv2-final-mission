@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReservationTimeJpaRepository extends JpaRepository<ReservationTime, Long> {
 
-    public boolean existsByTimeAndRestaurant(LocalTime time, Restaurant restaurant);
+    boolean existsByTimeAndRestaurant(LocalTime time, Restaurant restaurant);
 }

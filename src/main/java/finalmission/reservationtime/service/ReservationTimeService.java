@@ -11,9 +11,11 @@ import finalmission.restaurant.domain.Restaurant;
 import finalmission.restaurant.infrastructure.RestaurantJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ReservationTimeService {
 
     private final ReservationTimeJpaRepository reservationTimeJpaRepository;

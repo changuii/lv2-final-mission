@@ -3,10 +3,11 @@ package finalmission.reservation.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import finalmission.exception.CustomException;
 import finalmission.member.domain.Member;
+import finalmission.reservation.exception.ReservationNotPendingException;
 import finalmission.reservationtime.domain.ReservationTime;
 import finalmission.restaurant.domain.Restaurant;
+import finalmission.restaurant.exception.RestaurantNotOwnerException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
@@ -67,7 +68,7 @@ class ReservationTest {
             // when & then
             assertThatThrownBy(() -> {
                 reservation.accept(member);
-            }).isInstanceOf(CustomException.class);
+            }).isInstanceOf(ReservationNotPendingException.class);
         }
 
         @DisplayName("식당 소유주가 아니라면 예외가 발생한다.")
@@ -91,7 +92,7 @@ class ReservationTest {
             // when & then
             assertThatThrownBy(() -> {
                 reservation.accept(anotherMember);
-            }).isInstanceOf(CustomException.class);
+            }).isInstanceOf(RestaurantNotOwnerException.class);
         }
     }
 
@@ -144,7 +145,7 @@ class ReservationTest {
             // when & then
             assertThatThrownBy(() -> {
                 reservation.reject(member);
-            }).isInstanceOf(CustomException.class);
+            }).isInstanceOf(ReservationNotPendingException.class);
         }
 
         @DisplayName("식당 소유주가 아니라면 예외가 발생한다.")
@@ -168,7 +169,7 @@ class ReservationTest {
             // when & then
             assertThatThrownBy(() -> {
                 reservation.reject(anotherMember);
-            }).isInstanceOf(CustomException.class);
+            }).isInstanceOf(RestaurantNotOwnerException.class);
         }
     }
 

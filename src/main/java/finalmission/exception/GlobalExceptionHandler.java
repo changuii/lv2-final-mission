@@ -1,6 +1,6 @@
 package finalmission.exception;
 
-import org.springframework.http.HttpStatus;
+import finalmission.exception.custom.CustomException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -13,9 +13,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> exceptionHandle(
             final CustomException e
     ){
-        final ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+        final ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), e.getStatus().value());
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST.value())
+                .status(e.getStatus())
                 .body(errorResponse);
     }
 }

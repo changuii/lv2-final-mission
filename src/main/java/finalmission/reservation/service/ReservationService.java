@@ -1,7 +1,8 @@
 package finalmission.reservation.service;
 
-import finalmission.exception.CustomException;
 import finalmission.member.domain.Member;
+import finalmission.member.exception.MemberNotExistsException;
+import finalmission.member.exception.MemberNotFoundException;
 import finalmission.member.infrastructure.MemberJpaRepository;
 import finalmission.reservation.domain.DateGenerator;
 import finalmission.reservation.domain.Reservation;
@@ -9,10 +10,16 @@ import finalmission.reservation.domain.ReservationState;
 import finalmission.reservation.dto.ReservationDetailResponse;
 import finalmission.reservation.dto.ReservationRequest;
 import finalmission.reservation.dto.ReservationResponse;
+import finalmission.reservation.exception.ReservationNotExistsException;
+import finalmission.reservation.exception.ReservationNotFoundException;
+import finalmission.reservation.exception.ReservationNotOwnerException;
+import finalmission.reservation.exception.ReservationPastException;
 import finalmission.reservation.infrastructure.ReservationJpaRepository;
 import finalmission.reservationtime.domain.ReservationTime;
+import finalmission.reservationtime.exception.ReservationTimeNotExistsException;
 import finalmission.reservationtime.infrastructure.ReservationTimeJpaRepository;
 import finalmission.restaurant.domain.Restaurant;
+import finalmission.restaurant.exception.RestaurantNotExistsException;
 import finalmission.restaurant.infrastructure.RestaurantJpaRepository;
 import java.time.LocalDate;
 import java.util.List;
@@ -33,20 +40,20 @@ public class ReservationService {
 
     public ReservationDetailResponse create(final ReservationRequest reservationRequest, final String email) {
         final Member member = memberJpaRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException("존재하지 않는 멤버입니다."));
+                .orElseThrow(MemberNotExistsException::new);
         final Restaurant restaurant = restaurantJpaRepository.findById(reservationRequest.restaurantId())
-                .orElseThrow(() -> new CustomException("존재하지 않는 식당입니다."));
+                .orElseThrow(RestaurantNotExistsException::new);
         final ReservationTime reservationTime = reservationTimeJpaRepository.findById(
                         reservationRequest.reservationTimeId())
-                .orElseThrow(() -> new CustomException("존재하지 않는 시간입니다."));
+                .orElseThrow(ReservationTimeNotExistsException::new);
 
         final LocalDate today = dateGenerator.today();
         final LocalDate reservationDate = reservationRequest.date();
         if(reservationDate.isBefore(today) || reservationDate.equals(today)){
-            throw new CustomException("당일 예약 혹은 이미 지난 시간으로 예약이 불가능합니다.");
+            throw new ReservationPastException();
         }
         if(!reservationTime.isEqualRestaurant(restaurant)){
-            throw new CustomException("식당의 예약 시간이 잘못되었습니다.");
+            throw new ReservationTimeNotExistsException();
         }
 
         final Reservation notSavedReservation = Reservation.builder()
@@ -64,7 +71,7 @@ public class ReservationService {
     @Transactional(readOnly = true)
     public List<ReservationResponse> findAllByMember(final String email) {
         final Member member = memberJpaRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException("존재하지 않는 멤버입니다."));
+                .orElseThrow(MemberNotFoundException::new);
 
         return reservationJpaRepository.findAllByMember(member)
                 .stream()
@@ -75,12 +82,12 @@ public class ReservationService {
     @Transactional(readOnly = true)
     public ReservationDetailResponse findById(final Long id, final String email) {
         final Reservation reservation = reservationJpaRepository.findById(id)
-                .orElseThrow(() -> new CustomException("존재하지 않는 예약 id 입니다."));
+                .orElseThrow(ReservationNotFoundException::new);
         final Member member = memberJpaRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException("존재하지 않는 멤버입니다."));
+                .orElseThrow(MemberNotExistsException::new);
 
         if(!reservation.isOwnMember(member)){
-            throw new CustomException("자신 소유의 예약만 조회할 수 있습니다.");
+            throw new ReservationNotOwnerException();
         }
 
         return ReservationDetailResponse.from(reservation);
@@ -89,7 +96,7 @@ public class ReservationService {
     @Transactional(readOnly = true)
     public List<ReservationDetailResponse> findAllByRestaurantAndDate(final Long restaurantId, final LocalDate date) {
         final Restaurant restaurant = restaurantJpaRepository.findById(restaurantId)
-                .orElseThrow(() -> new CustomException("존재하지 않는 식당입니다."));
+                .orElseThrow(RestaurantNotExistsException::new);
 
         return reservationJpaRepository.findAllByRestaurantAndDate(restaurant, date)
                 .stream()
@@ -99,30 +106,30 @@ public class ReservationService {
 
     public void accept(final Long reservationId, final String email) {
         final Reservation reservation = reservationJpaRepository.findById(reservationId)
-                .orElseThrow(() -> new CustomException("존재하지 않는 예약 id 입니다."));
+                .orElseThrow(ReservationNotExistsException::new);
         final Member member = memberJpaRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException("존재하지 않는 멤버입니다."));
+                .orElseThrow(MemberNotExistsException::new);
 
         reservation.accept(member);
     }
 
     public void reject(final Long reservationId, final String email) {
         final Reservation reservation = reservationJpaRepository.findById(reservationId)
-                .orElseThrow(() -> new CustomException("존재하지 않는 예약 id 입니다."));
+                .orElseThrow(ReservationNotExistsException::new);
         final Member member = memberJpaRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException("존재하지 않는 멤버입니다."));
+                .orElseThrow(MemberNotExistsException::new);
 
         reservation.reject(member);
     }
 
     public void deleteById(final Long id, final String email){
         final Reservation reservation = reservationJpaRepository.findById(id)
-                .orElseThrow(() -> new CustomException("존재하지 않는 예약 id 입니다."));
+                .orElseThrow(ReservationNotFoundException::new);
         final Member member = memberJpaRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException("존재하지 않는 멤버입니다."));
+                .orElseThrow(MemberNotExistsException::new);
 
         if(!reservation.isOwnMember(member)){
-            throw new CustomException("자신 소유의 예약만 삭제할 수 있습니다.");
+            throw new ReservationNotOwnerException();
         }
 
 

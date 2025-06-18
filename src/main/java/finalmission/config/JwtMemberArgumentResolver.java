@@ -1,6 +1,6 @@
 package finalmission.config;
 
-import finalmission.exception.CustomException;
+import finalmission.config.exception.TokenInvalidException;
 import finalmission.member.infrastructure.JwtAuthTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -29,10 +29,10 @@ public class JwtMemberArgumentResolver implements HandlerMethodArgumentResolver 
         final String jwt = request.getHeader("Authorization");
 
         if (jwt == null) {
-            throw new CustomException("토큰이 존재하지 않습니다.");
+            throw new TokenInvalidException();
         }
         if (!jwtAuthTokenProvider.isValidJwt(jwt)) {
-            throw new CustomException("유효하지 않은 토큰입니다.");
+            throw new TokenInvalidException();
         }
 
         return jwtAuthTokenProvider.extractSubject(jwt);

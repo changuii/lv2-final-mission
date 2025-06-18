@@ -209,7 +209,7 @@ public class ReservationApiTest {
                     .statusCode(HttpStatus.OK.value());
         }
 
-        @DisplayName("자신의 소유가 아니라면 400을 응답한다.")
+        @DisplayName("자신의 소유가 아니라면 401을 응답한다.")
         @Test
         void findById2() {
             final LocalDate today = LocalDate.of(2025, 06, 01);
@@ -244,7 +244,7 @@ public class ReservationApiTest {
                     .body(request)
                     .when().get("/reservation/{id}", reservationId)
                     .then()
-                    .statusCode(HttpStatus.BAD_REQUEST.value());
+                    .statusCode(HttpStatus.UNAUTHORIZED.value());
         }
 
     }
@@ -372,7 +372,7 @@ public class ReservationApiTest {
                     .statusCode(HttpStatus.OK.value());
         }
 
-        @DisplayName("식당 주인이 아니라면, 승인처리가 불가능하고 400 응답을 반환한다.")
+        @DisplayName("식당 주인이 아니라면, 승인처리가 불가능하고 401 응답을 반환한다.")
         @Test
         void accept2() {
             final LocalDate today = LocalDate.of(2025, 06, 01);
@@ -403,7 +403,7 @@ public class ReservationApiTest {
                     .when()
                     .patch("/reservation/accept/{id}", reservationId)
                     .then()
-                    .statusCode(HttpStatus.BAD_REQUEST.value());
+                    .statusCode(HttpStatus.UNAUTHORIZED.value());
         }
 
         @DisplayName("대기 상태의 예약이 아니라면 400을 응답한다.")
@@ -440,10 +440,10 @@ public class ReservationApiTest {
     }
 
     @Nested
-    @DisplayName("예약 승인")
+    @DisplayName("예약 거부")
     class Reject {
 
-        @DisplayName("예약 정상 승인")
+        @DisplayName("예약 정상 거부")
         @Test
         void reject1() {
             final LocalDate today = LocalDate.of(2025, 06, 01);
@@ -473,7 +473,7 @@ public class ReservationApiTest {
                     .statusCode(HttpStatus.OK.value());
         }
 
-        @DisplayName("식당 주인이 아니라면, 승인처리가 불가능하고 400 응답을 반환한다.")
+        @DisplayName("식당 주인이 아니라면, 거부처리가 불가능하고 401 응답을 반환한다.")
         @Test
         void rejct2() {
             final LocalDate today = LocalDate.of(2025, 06, 01);
@@ -504,7 +504,7 @@ public class ReservationApiTest {
                     .when()
                     .patch("/reservation/reject/{id}", reservationId)
                     .then()
-                    .statusCode(HttpStatus.BAD_REQUEST.value());
+                    .statusCode(HttpStatus.UNAUTHORIZED.value());
         }
 
         @DisplayName("대기 상태의 예약이 아니라면 400을 응답한다.")
@@ -614,7 +614,7 @@ public class ReservationApiTest {
                     .body(request)
                     .when().delete("/reservation/{id}", reservationId)
                     .then()
-                    .statusCode(HttpStatus.BAD_REQUEST.value());
+                    .statusCode(HttpStatus.UNAUTHORIZED.value());
         }
     }
 

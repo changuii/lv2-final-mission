@@ -57,7 +57,7 @@ public class ReservationTimeApiTest {
                     .body("time", equalTo(time.toString()));
         }
 
-        @DisplayName("해당 식당에 이미 존재하는 시간이라면 400을 응답한다.")
+        @DisplayName("해당 식당에 이미 존재하는 시간이라면 409를 응답한다.")
         @Test
         void create2() {
             final String email = "asd@naver.com";
@@ -80,10 +80,10 @@ public class ReservationTimeApiTest {
                     .body(request)
                     .when().post("/reservation-time")
                     .then()
-                    .statusCode(HttpStatus.BAD_REQUEST.value());
+                    .statusCode(HttpStatus.CONFLICT.value());
         }
 
-        @DisplayName("해당 식당의 주인이 아니라면 400을 응답한다.")
+        @DisplayName("해당 식당의 주인이 아니라면 401을 응답한다.")
         @Test
         void create3() {
             final String email = "asd@naver.com";
@@ -109,7 +109,7 @@ public class ReservationTimeApiTest {
                     .body(request)
                     .when().post("/reservation-time")
                     .then()
-                    .statusCode(HttpStatus.BAD_REQUEST.value());
+                    .statusCode(HttpStatus.UNAUTHORIZED.value());
         }
     }
 }

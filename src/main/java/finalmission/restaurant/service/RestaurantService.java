@@ -1,7 +1,7 @@
 package finalmission.restaurant.service;
 
-import finalmission.exception.CustomException;
 import finalmission.member.domain.Member;
+import finalmission.member.exception.MemberNotExistsException;
 import finalmission.member.infrastructure.MemberJpaRepository;
 import finalmission.restaurant.domain.Restaurant;
 import finalmission.restaurant.dto.RestaurantRequest;
@@ -22,7 +22,7 @@ public class RestaurantService {
 
     public RestaurantResponse createRestaurant(final RestaurantRequest request, final String email) {
         final Member member = memberJpaRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException("존재하지 않는 멤버입니다."));
+                .orElseThrow(MemberNotExistsException::new);
 
         final Restaurant restaurant = Restaurant.builder()
                 .name(request.name())

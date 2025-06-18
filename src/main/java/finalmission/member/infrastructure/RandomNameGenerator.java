@@ -1,11 +1,11 @@
 package finalmission.member.infrastructure;
 
-import finalmission.exception.CustomException;
 import finalmission.member.domain.NameGenerator;
+import finalmission.member.dto.NicknameResult;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -25,15 +25,21 @@ public class RandomNameGenerator implements NameGenerator {
     }
 
     @Override
-    public String generateName() {
-        return restClient.get()
+    public NicknameResult generateName() {
+        final ResponseEntity<List<String>> response = restClient.get()
                 .retrieve()
-                .onStatus(HttpStatusCode::isError, (request, response) -> {
-                    throw new CustomException("랜덤 이름 생성에 실패하였습니다.");
-                })
                 .toEntity(new ParameterizedTypeReference<List<String>>() {
-                })
-                .getBody()
-                .getFirst();
+                });
+
+        if (response.getStatusCode().isError()) {
+            return new NicknameResult(
+                    "error",
+                    true
+            );
+        }
+        return new NicknameResult(
+                response.getBody().getFirst(),
+                false
+        );
     }
 }

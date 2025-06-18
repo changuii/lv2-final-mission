@@ -1,5 +1,7 @@
 package finalmission.member.domain;
 
+import finalmission.member.dto.NicknameResult;
+
 public interface NameGenerator {
-    String generateName();
+    NicknameResult generateName();
 }

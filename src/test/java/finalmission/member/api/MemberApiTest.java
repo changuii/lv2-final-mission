@@ -6,6 +6,7 @@ import static org.mockito.BDDMockito.given;
 import finalmission.fixture.ApiTestFixture;
 import finalmission.member.domain.NameGenerator;
 import finalmission.member.dto.MemberRequest;
+import finalmission.member.dto.NicknameResult;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
@@ -41,7 +42,7 @@ public class MemberApiTest {
 
             final String nickname = "mock";
             given(nameGenerator.generateName())
-                    .willReturn(nickname);
+                    .willReturn(new NicknameResult(nickname, false));
 
             RestAssured
                     .given()
@@ -56,7 +57,7 @@ public class MemberApiTest {
                     .body("nickname", equalTo(nickname));
         }
 
-        @DisplayName("이미 존재하는 이메일인 경우 400을 응답한다.")
+        @DisplayName("이미 존재하는 이메일인 경우 409을 응답한다.")
         @Test
         void create2() {
             final String email = "asd@naver.com";
@@ -65,7 +66,7 @@ public class MemberApiTest {
 
             final String nickname = "mock";
             given(nameGenerator.generateName())
-                    .willReturn(nickname);
+                    .willReturn(new NicknameResult(nickname, false));
 
             ApiTestFixture.createMember(email, password, port);
 
@@ -77,7 +78,7 @@ public class MemberApiTest {
                     .contentType(ContentType.JSON)
                     .when().post("/member")
                     .then()
-                    .statusCode(HttpStatus.BAD_REQUEST.value());
+                    .statusCode(HttpStatus.CONFLICT.value());
         }
 
     }

@@ -1,10 +1,11 @@
 package finalmission.member.service;
 
-import finalmission.exception.CustomException;
 import finalmission.member.domain.AuthTokenProvider;
 import finalmission.member.domain.Member;
 import finalmission.member.dto.AuthRequest;
 import finalmission.member.dto.AuthResponse;
+import finalmission.member.exception.MemberNotExistsException;
+import finalmission.member.exception.MemberPasswordMissMatchException;
 import finalmission.member.infrastructure.MemberJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,10 +21,10 @@ public class AuthService {
 
     public AuthResponse login(final AuthRequest request){
         final Member member = memberJpaRepository.findByEmail(request.email())
-                .orElseThrow(() -> new CustomException("존재하지 않는 이메일입니다."));
+                .orElseThrow(MemberNotExistsException::new);
 
         if(!member.matchPassword(request.password())){
-            throw new CustomException("비밀번호가 일치하지 않습니다.");
+            throw new MemberPasswordMissMatchException();
         }
 
         final String token = authTokenProvider.generateToken(member.getEmail());

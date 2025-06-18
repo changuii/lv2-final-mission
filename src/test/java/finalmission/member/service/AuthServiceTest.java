@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-import finalmission.exception.CustomException;
+import finalmission.exception.custom.CustomException;
 import finalmission.member.domain.AuthTokenProvider;
 import finalmission.member.domain.Member;
 import finalmission.member.dto.AuthRequest;

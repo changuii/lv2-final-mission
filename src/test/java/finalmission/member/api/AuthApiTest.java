@@ -46,7 +46,7 @@ public class AuthApiTest {
                     .body("token", notNullValue());
         }
 
-        @DisplayName("존재하지 않는 이메일이라면 400을 응답한다.")
+        @DisplayName("존재하지 않는 이메일이라면 404를 응답한다.")
         @Test
         void login2() {
             final String email = "asd@naver.com";

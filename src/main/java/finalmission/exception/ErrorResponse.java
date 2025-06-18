@@ -1,6 +1,7 @@
 package finalmission.exception;
 
 public record ErrorResponse(
-        String message
+        String message,
+        int httpStatusCode
 ) {
 }

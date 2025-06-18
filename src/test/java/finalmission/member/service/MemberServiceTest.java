@@ -6,11 +6,12 @@ import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-import finalmission.exception.CustomException;
+import finalmission.exception.custom.CustomException;
 import finalmission.member.domain.Member;
 import finalmission.member.domain.NameGenerator;
 import finalmission.member.dto.MemberRequest;
 import finalmission.member.dto.MemberResponse;
+import finalmission.member.dto.NicknameResult;
 import finalmission.member.infrastructure.MemberJpaRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -41,19 +42,20 @@ class MemberServiceTest {
                     "pass"
             );
 
+            final String nickname = "mock";
             given(nameGenerator.generateName())
-                    .willReturn("mock");
+                    .willReturn(new NicknameResult(nickname, false));
             given(memberJpaRepository.save(any()))
                     .willReturn(new Member(
                             1L,
-                            "mock",
+                            nickname,
                             request.email(),
                             request.password()
                     ));
 
             final MemberResponse expected = new MemberResponse(
                     "asd123@naver.com",
-                    "mock"
+                    nickname
             );
 
             // when
@@ -72,8 +74,9 @@ class MemberServiceTest {
                     "pass"
             );
 
+            final String nickname = "mock";
             given(nameGenerator.generateName())
-                    .willReturn("mock");
+                    .willReturn(new NicknameResult(nickname, false));
             given(memberJpaRepository.existsByEmail(request.email()))
                     .willReturn(true);
             given(memberJpaRepository.save(any()))

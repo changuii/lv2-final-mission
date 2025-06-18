@@ -47,14 +47,8 @@ public class ReservationService {
                         reservationRequest.reservationTimeId())
                 .orElseThrow(ReservationTimeNotExistsException::new);
 
-        final LocalDate today = dateGenerator.today();
-        final LocalDate reservationDate = reservationRequest.date();
-        if(reservationDate.isBefore(today) || reservationDate.equals(today)){
-            throw new ReservationPastException();
-        }
-        if(!reservationTime.isEqualRestaurant(restaurant)){
-            throw new ReservationTimeNotExistsException();
-        }
+        validatePastDate(reservationRequest.date(), dateGenerator.today());
+        validateTimeContainRestaurant(reservationTime, restaurant);
 
         final Reservation notSavedReservation = Reservation.builder()
                 .date(reservationRequest.date())
@@ -66,6 +60,18 @@ public class ReservationService {
 
         final Reservation savedReservation = reservationJpaRepository.save(notSavedReservation);
         return ReservationDetailResponse.from(savedReservation);
+    }
+
+    private void validateTimeContainRestaurant(final ReservationTime reservationTime, final Restaurant restaurant) {
+        if (!reservationTime.isEqualRestaurant(restaurant)) {
+            throw new ReservationTimeNotExistsException();
+        }
+    }
+
+    private void validatePastDate(final LocalDate reservationDate, final LocalDate today) {
+        if (reservationDate.isBefore(today) || reservationDate.equals(today)) {
+            throw new ReservationPastException();
+        }
     }
 
     @Transactional(readOnly = true)
@@ -86,11 +92,15 @@ public class ReservationService {
         final Member member = memberJpaRepository.findByEmail(email)
                 .orElseThrow(MemberNotExistsException::new);
 
+        validateMemberIsOwner(reservation, member);
+
+        return ReservationDetailResponse.from(reservation);
+    }
+
+    private void validateMemberIsOwner(final Reservation reservation, final Member member) {
         if(!reservation.isOwnMember(member)){
             throw new ReservationNotOwnerException();
         }
-
-        return ReservationDetailResponse.from(reservation);
     }
 
     @Transactional(readOnly = true)
@@ -128,10 +138,7 @@ public class ReservationService {
         final Member member = memberJpaRepository.findByEmail(email)
                 .orElseThrow(MemberNotExistsException::new);
 
-        if(!reservation.isOwnMember(member)){
-            throw new ReservationNotOwnerException();
-        }
-
+        validateMemberIsOwner(reservation, member);
 
         reservationJpaRepository.delete(reservation);
     }

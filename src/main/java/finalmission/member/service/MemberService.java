@@ -25,9 +25,7 @@ public class MemberService {
             throw new MemberEmailDuplicationException();
         }
         final NicknameResult nicknameResult = nameGenerator.generateName();
-        if(nicknameResult.isError()){
-            throw new MemberNicknameException();
-        }
+        validateNickname(nicknameResult);
 
         final Member notSavedMember = Member.builder()
                 .email(request.email())
@@ -37,5 +35,11 @@ public class MemberService {
 
         final Member savedMember = memberJpaRepository.save(notSavedMember);
         return MemberResponse.from(savedMember);
+    }
+
+    private void validateNickname(final NicknameResult nicknameResult) {
+        if (nicknameResult.isError()) {
+            throw new MemberNicknameException();
+        }
     }
 }

@@ -23,12 +23,16 @@ public class AuthService {
         final Member member = memberJpaRepository.findByEmail(request.email())
                 .orElseThrow(MemberNotExistsException::new);
 
-        if(!member.matchPassword(request.password())){
-            throw new MemberPasswordMissMatchException();
-        }
+        validatePassword(request, member);
 
         final String token = authTokenProvider.generateToken(member.getEmail());
         return new AuthResponse(token);
+    }
+
+    private static void validatePassword(final AuthRequest request, final Member member) {
+        if (!member.matchPassword(request.password())) {
+            throw new MemberPasswordMissMatchException();
+        }
     }
 
 }
